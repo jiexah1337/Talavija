@@ -1,7 +1,6 @@
-
 @extends('layouts.master')
-
 @section('content')
+
     @include('shared.nav')
     <head>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -9,21 +8,29 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
     </head>
-    <main role="main" class="ml-sm-auto col-md-10 pt-3">
+    <main role="main" class="ml-sm-auto col-md-9 pt-3">
         <br>
+        <div class="row">
         <form  action="{{route('add.store')}}" method="POST" role="form">
             {{ csrf_field() }}
             <legend>
                 Maksajums
             </legend>
-            <div class="col-sm-6">
+
+            <div class="col md-8">
 
                 <div class="form-group">
                     <label for="title">
-                        Nosaukums
+                        Maksajuma tips
                     </label>
-                    <input class="form-control" name="title" placeholder="Title" type="text" required="required">
+                    <select class="form-control" id="rep-type" name="type">
+                        <option >Maksājums</option>
+                        <option >Sods</option>
+                        <option >Prēmija</option>
+                        <option >Cits</option>
+                    </select>
                 </div>
+
                  <div class="form-group">
                     <label for="start_date">
                         Pierakstisanas datums
@@ -70,8 +77,11 @@
 
             </div>
             <br>
-
         </form >
+            <div class="col md-4">
+        @include('fragments.samaksat')
+            </div>
+            </div>
     </main>
 
 

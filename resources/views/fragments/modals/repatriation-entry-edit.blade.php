@@ -106,9 +106,9 @@
                                         <option value="7" @if($paidMonth == 7) selected @endif >Jūlijs</option>
                                         <option value="8" @if($paidMonth == 8) selected @endif >Augusts</option>
                                         <option value="9" @if($paidMonth == 9) selected @endif >Septembris</option>
-                                        <option value="10"@if($paidMonth == 10) selected @endif>Oktobris</option>
-                                        <option value="11"@if($paidMonth == 11) selected @endif>Novembris</option>
-                                        <option value="12"@if($paidMonth == 12) selected @endif>Decembris</option>
+                                        <option value="10" @if($paidMonth == 10) selected @endif>Oktobris</option>
+                                        <option value="11" @if($paidMonth == 11) selected @endif>Novembris</option>
+                                        <option value="12" @if($paidMonth == 12) selected @endif>Decembris</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3">

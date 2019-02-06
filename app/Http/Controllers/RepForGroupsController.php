@@ -8,8 +8,12 @@
 
 namespace App\Http\Controllers;
 use DB;
+use Entities\Bio;
+use Entities\TimeAndPlace;
+use Entities\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Entities\Repatriation;
 class RepForGroupsController
 {
     public function index(Request $request){
@@ -41,11 +45,11 @@ class RepForGroupsController
         $i=0;
         foreach ($users as $member_id){
             foreach ($member_id as $id){
-                $mirus=DB::table('bios')->where('member_id','=',$id)->value('deathdata_id');
+                $mirus=Bio::query()->where('member_id','=',$id)->value('deathdata_id');
+                $Discount=Repatriation::query()->where('member_id',$id)->value('discount');
+                if(null == TimeAndPlace::query()->where('location_id','=',$mirus)->value('date') ) {
 
-                if(null == DB::table("time_and_places")->where('location_id','=',$mirus)->value('date') ) {
-
-                    $lietotajs = DB::table('users')->where('member_id', '=', $id)->get();
+                    $lietotajs = User::query()->where('member_id', '=', $id)->get();
                     $rep[$i] =
                         array(
                             "title" => $title,
@@ -55,7 +59,7 @@ class RepForGroupsController
                             "name" => $lietotajs[0]->name,
                             "lastname" => $lietotajs[0]->surname,
                             "Value" => $Value,
-                            "discount" => 0,
+                            "discount" => $Discount,
 
                         );
                 }
@@ -72,11 +76,19 @@ class RepForGroupsController
         $date = new Carbon( ($request->start_date) );
 
         foreach($request->checkbox as $id){
-            $member_id=$request->member_id[$id];
             $amount=$request->Summa[$id];
-            $discount=$request->discount[$id];
-            DB::table('repatriations')->insert(
-                ['member_id' => $member_id, 'year' => $date->year,'month' => $date->month,'title' => $title,'amount' => $amount, 'type' => $reason,'collected' => 0]
+
+            $discount=$request->Discount[$id];
+
+            Repatriation::query()->insert(
+                ['member_id' => $id,
+                    'year' => $date->year,
+                    'month' => $date->month,
+                    'title' => $title,
+                    'amount' => $amount*-1,
+                    'unique_code'=>'Maksajums',
+                    'type' => $reason,
+                    'discount' => $discount]
             );
 
         }

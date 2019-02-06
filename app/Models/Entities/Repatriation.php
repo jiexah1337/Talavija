@@ -15,7 +15,7 @@ class Repatriation extends Model
         'title',
         'type',
         'member_id',
-        'collected',
+        'discount',
         'issue_date',
         'paid_date',
         'total_balance'

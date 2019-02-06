@@ -44,15 +44,15 @@
                     <td  class="Veikt">
                         <input type="checkbox"  name="checkbox[]" id="{{$key+1/1024}}" value="{{$key}}" checked />
                     </td>
-                    <script>
-                        function postfunc(id){
-                            if(document.getElementById(id+1/1024).value != 1){
-                                document.getElementById(id+2/1024).value=0;
-                            }
-                        }
+                    {{--<script>--}}
+                        {{--function postfunc(id){--}}
+                            {{--if(document.getElementById(id+1/1024).value != 1){--}}
+                                {{--document.getElementById(id+2/1024).value=0;--}}
+                            {{--}--}}
+                        {{--}--}}
 
-                    </script>
-                    <input type="hidden" name="checksbox[]" id="{{$key+2/1024}}" value="1"  />
+                    {{--</script>--}}
+                    <input type="hidden" name="unique_id[]"  value="{{$id['Number']}}"  />
 
                     <td class="Vārds">
 

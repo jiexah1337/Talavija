@@ -44,7 +44,7 @@
 
 
             <!-- TODO: Yearly balance -->
-            <td class="nyi">
+            <td class="text-center">
             <!-- OKAY maybe you don't understand how it works?
             Es meginasu pastastit xD
             Ieks RepatriationController ir metods getBallance kurs skaita balanci lieotajiem par visiem gadiem
@@ -52,8 +52,8 @@
             getReps un tad getReps returno to uz view. u can chack what is $balance with dd($balance)
             $users[$key]->member_id mums padod membera id kuru mes tagad apstradajam un mes atspogulojam vina bilanci
             -->
-                @if(isset($balance[$users[$key]->member_id]))
-                    {{$balance[$users[$key]->member_id]->total_balance}}
+               @if(isset($balance[$users[$key]->member_id]->total_balance))
+                    {{number_format($balance[$users[$key]->member_id]->total_balance, 2, ',', ' ')}}
                 @endif
             </td>
 
@@ -108,7 +108,7 @@
             </td>
             <td class="text-center">
                 @if(isset($rep))
-                    {{number_format($rep->sum('collected'), 2, ',', ' ')}}
+                    {{number_format($rep->where('amount','>',0)->sum('amount'), 2, ',', ' ')}}
                 @else
                     {{number_format(0.00,2,',',' ')}}
                 @endif

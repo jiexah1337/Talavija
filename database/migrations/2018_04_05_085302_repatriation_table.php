@@ -20,6 +20,11 @@ class RepatriationTable extends Migration
             $table->integer('month');
             $table->decimal('amount',20,5);
             $table->string('title');
+            $table->integer('discount');
+            $table->string('type');
+            $table->string('unique_code');
+            $table->date('issue_date');
+            $table->date('paid_date')->nullable();
         });
     }
 

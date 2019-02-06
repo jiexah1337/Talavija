@@ -22,7 +22,6 @@ class FixedWrongTypeLimits extends Migration
 
         Schema::table('repatriations', function (Blueprint $table) {
             $table->decimal('amount',20, 2)->change();
-            $table->decimal('collected',20, 2)->change();
             $table->string('title',50)->change();
             $table->string('type',50)->change();
         });

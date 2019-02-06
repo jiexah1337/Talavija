@@ -52,7 +52,7 @@ class RepatriationController extends Controller
         foreach ($repss as $key=>$member_id){
             $bilance=0;
             foreach ($member_id as $id){
-                $bilance+=$id->collected-$id->amount;
+                $bilance+=$id->amount;
             }
             $member_id->total_balance=$bilance;
 
@@ -199,14 +199,6 @@ class RepatriationController extends Controller
                 $type = $request->get('type');
                 $year = $request->get('year');
                 $month = $request->get('month');
-                if($request->has('collect')){
-                    $collected = $request->get('collect');
-                    if($collected == null){
-                        $collected = 0;
-                    }
-                } else {
-                    $collected = 0;
-                }
 
 
                 if(in_array($type, ['Sods','Maksājums','Prēmija','Cits'])){
@@ -218,7 +210,6 @@ class RepatriationController extends Controller
                             'title' => $title,
                             'type' => $type,
                             'amount' => $amount,
-                            'collected' => $collected,
                             'member_id' => $rep->member_id
                         ]);
                         return response()->json(array('success' => true, 'msg' => "Repartīcija rediģēta!", 'gllURL' => $generatedLoader));
@@ -229,7 +220,6 @@ class RepatriationController extends Controller
                             'title' => $title,
                             'type' => $type,
                             'amount' => $amount,
-                            'collected' => $collected,
                             'member_id' => $member_id,
                             'year'  =>  $year,
                             'month' => $month

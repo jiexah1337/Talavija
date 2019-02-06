@@ -36,9 +36,12 @@ class FileController extends Controller
             $array[$key]['IBAN'] = $ntry->NtryDtls->TxDtls->RltdPties->DbtrAcct->Id->IBAN;
             $array[$key]['Merkis'] =  $ntry->NtryDtls->TxDtls->RmtInf->Ustrd;
 
-            $array[$key]['member_id']=DB::table('users')
+            $array[$key]['member_id']=User::query()
                 ->where('name',$array[$key]['Name_Lastname'][0])
-                ->where('surname',$array[$key]['Name_Lastname'][1])->value('member_id');
+                ->where('name',$array[$key]['Name_Lastname'][1])
+                    ->where('surname',$array[$key]['Name_Lastname'][0])
+                    ->where('surname',$array[$key]['Name_Lastname'][1])
+                    ->value('member_id');
             $key++;
         }
         $users=DB::table('users')->select('name','surname','member_id')->get();
@@ -59,44 +62,31 @@ class FileController extends Controller
     }
     public function payments( Request $request){
         foreach($request->checkbox as $id){
-
-
             $member_id=str_word_count($request['Select'][$id], 1 , 'āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ0123456789');
 
             $amount=$request['Amount'][$id];
-
+            $unique_code=$request['unique_id'][$id];
             $date = new Carbon( ($request['Date'][$id]));
-
-            // 
-
-
             /**
              * @var $reps Repatriation[]
              *
              */
+            $row=Repatriation::query()->where('unique_code',$unique_code)->get();
+            if(!isset($row)) {
 
 
-
-            $isset[]=DB::table('repatriations')
-                ->where('member_id',$member_id[2])
-                ->where('collected','0')
-                ->where('year',$date->year)
-                ->where('month',$date->month)
-                ->get();
-
-
-            if(isset($isset)) {
-                DB::table('repatriations')->where('member_id', $member_id[2])->
-                where('collected', '0')->where('year', $date->year)->where('month', $date->month)
-                    ->update(['collected' => $amount]);
-            }else {
-                DB::table('repatriations')->insert(
-                    ['member_id' => $member_id[2], 'amount' => 0, 'title' => 0,
-                        'type' => 0, 'year' => $date->year, 'month' => $date->month, 'collected' => $amount]
+                Repatriation::query()->insert(
+                    ['member_id' => $member_id[2],
+                        'amount' => $amount * -1,
+                        'title' => 0,
+                        'type' => 0,
+                        'year' => $date->year,
+                        'month' => $date->month,
+                        'discount' => 0,
+                        'unique_code' => $unique_code]
                 );
+            }else{
             }
         }
-
     }
-
 }
