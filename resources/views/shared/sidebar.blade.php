@@ -103,17 +103,6 @@
                             </a>
                         </li>
                         <?php endif ?>
-                        <?php if($user->hasAccess(['money.view'])): ?>
-                        <li class="nav-item bg-secondary text-success">
-                            <a class="nav-link text-success" href="/money/upload">
-                                Maksājumu imports
-                                <span class="pull-right">
-                    <i class="fas fa-euro-sign"></i>
-                </span>
-                            </a>
-                        </li>
-                        <?php endif ?>
-
                 </ul>
             </div>
         </li>

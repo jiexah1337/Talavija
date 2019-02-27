@@ -30,10 +30,21 @@
             <td>
                 <div class="btn-group btn-group-sm" role="group">
                     <a type="button" class="btn btn-secondary" href="/bio/{{$user->member_id}}">Bio</a>
-                    <a type="button" class="btn btn-secondary disabled">?</a>
+                    <a type="button" class="btn btn-secondary " onclick="confirmation({{$user->member_id}})"><i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
                 </div>
             </td>
         </tr>
     @endforeach
     </tbody>
 </table>
+<script>
+    function  confirmation(id) {
+
+    var result = confirm("Want to delete?");
+    if (result) {
+        location.href="/users/delete?id="+id;
+    }
+    }
+
+</script>

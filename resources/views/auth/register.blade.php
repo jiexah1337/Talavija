@@ -81,7 +81,7 @@
                                     <input type="number" min="1" max="31" required class="form-control" id="birth_day" name="birth_day" value="{{old('birth_day')}}" placeholder="DD">
                                 </div>
                                 <div class="col-sm-3">
-                                    {{--<input type="number" min="1" max="12" required class="form-control" id="birth_month" name="birth_month" value="{{old('birth_month')}}" placeholder="MM">--}}
+                                    {{--<input type="number" min="1" max="12" requzired class="form-control" id="birth_month" name="birth_month" value="{{old('birth_month')}}" placeholder="MM">--}}
                                     <select name="birth_month" class="form-control" id="birth_month">
                                         <option value="1">Janvāris</option>
                                         <option value="2">Februāris</option>
@@ -102,7 +102,7 @@
                                 </div>
 
 
-
+            
 
                                 <script>
                                     $(document).ready(function(){

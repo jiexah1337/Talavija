@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Entities\Repatriation;
+use Entities\Status;
 use Illuminate\Http\Request;
 use Storage;
 use Orchestra\Parser\Xml\Facade as XmlParser;
@@ -20,8 +21,12 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $xml = simplexml_load_file($request->file('xml'));
+        $users=User::all()->toArray();
+        foreach($users as $key=>$user){
+            $users[$key]['name']=strtolower($user['name']);
+            $users[$key]['surname']=strtolower($user['surname']);
+        }
         $key=0;
-
         foreach($xml->BkToCstmrAcctRpt->Rpt->Ntry as $ntry){
             $array[$key]['Name_Lastname']=$ntry->NtryDtls->TxDtls->RltdPties->Dbtr->Nm;
             $array[$key]['Name_Lastname']=str_word_count($array[$key]['Name_Lastname'], 1 ,
@@ -36,12 +41,13 @@ class FileController extends Controller
             $array[$key]['IBAN'] = $ntry->NtryDtls->TxDtls->RltdPties->DbtrAcct->Id->IBAN;
             $array[$key]['Merkis'] =  $ntry->NtryDtls->TxDtls->RmtInf->Ustrd;
 
-            $array[$key]['member_id']=User::query()
-                ->where('name',$array[$key]['Name_Lastname'][0])
-                ->where('name',$array[$key]['Name_Lastname'][1])
-                    ->where('surname',$array[$key]['Name_Lastname'][0])
-                    ->where('surname',$array[$key]['Name_Lastname'][1])
-                    ->value('member_id');
+            foreach ($users as $user){
+                if($user['name'] == strtolower($array[$key]['Name_Lastname'][0])
+                    and $user['surname']=strtolower($array[$key]['Name_Lastname'][1])){
+                    $array[$key]['member_id']=$user['member_id'];
+                }
+            }
+
             $key++;
         }
         $users=DB::table('users')->select('name','surname','member_id')->get();
@@ -61,32 +67,42 @@ class FileController extends Controller
 
     }
     public function payments( Request $request){
-        foreach($request->checkbox as $id){
-            $member_id=str_word_count($request['Select'][$id], 1 , 'āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ0123456789');
 
+        foreach($request->checkbox as $id){
+            $member_id=str_word_count($request->Lietotajs[$id], 1 , 'āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ0123456789');
             $amount=$request['Amount'][$id];
+
+
             $unique_code=$request['unique_id'][$id];
+
             $date = new Carbon( ($request['Date'][$id]));
             /**
              * @var $reps Repatriation[]
              *
              */
-            $row=Repatriation::query()->where('unique_code',$unique_code)->get();
-            if(!isset($row)) {
-
+//            $row=Repatriation::query()->where('unique_code',$unique_code)->get();
+//            if(!isset($row)) {
+//
 
                 Repatriation::query()->insert(
                     ['member_id' => $member_id[2],
-                        'amount' => $amount * -1,
+                        'amount' => $amount,
                         'title' => 0,
                         'type' => 0,
                         'year' => $date->year,
                         'month' => $date->month,
                         'discount' => 0,
-                        'unique_code' => $unique_code]
+                        'unique_code' => $unique_code,
+                        'issue_date' => $date]
                 );
-            }else{
-            }
+//            }
+
         }
+
+        $statuses=Status::query()->select('title','id')->get();
+
+        return view('fragments.rep-for-groups')->with("statuses",$statuses);
+
+
     }
 }

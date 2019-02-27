@@ -23,13 +23,13 @@ Route::middleware(['auth'])->group(function () {
         //User Listing
         Route::get                      ('/list/{page?}/{async?}',                    'UsersController@index')->name('userList');
         Route::get                      ('/index',                                    'UsersController@indexJson');
-    Route::get                      ('/validate/{type}/{data?}',                  'UsersController@customValidation');
+        Route::get                      ('/validate/{type}/{data?}',                  'UsersController@customValidation');
         Route::get                      ('/json/{member_id}',                         'UsersController@userJson');
         Route::get                      ('/search/{query}',                           'UsersController@search');
-        Route::get                      ('/listsearch/{page}/{query?}',         'UsersController@listSearch');
+        Route::get                      ('/listsearch/{page}/{query?}',            'UsersController@listSearch');
         //Registration
         Route::match    (['get','post'], '/register',                   'UsersController@registerUser');
-
+        Route::get                     ('/delete/{member_id?}',                'UsersController@deleteUser');
         //Profile VIEWING
         Route::get                      ('/{member_id}',                'UsersController@profile');
 
@@ -115,6 +115,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('payments', 'FileController@payments')->name('payments');
         Route::post('/store','FileController@store');
         Route::get                      ('/add',                                    'RepForGroups@index');
+
+        Route::post('/RepForGroups/fillTable', 'RepForGroups@fillTable');
+
+        Route::get('/RepForGroups/fillTable', 'RepForGroups@fillTable');
+        Route::get('/RepForGroups/search','RepForGroups@search');
         Route::resource('add', 'RepForGroups');
         Route::get                      ('/create',                                 'RepForGroupsController@index');
         Route::resource('create','RepForGroupsController');

@@ -44,6 +44,7 @@
                 data: { year : year, month : month, member : member},
                 success: function(data){
                     $('#modalContainer').html(data.html);
+                    $('div.card:odd').css("background-color", "yellow")
                 }
             });
         });

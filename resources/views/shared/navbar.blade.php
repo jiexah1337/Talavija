@@ -50,7 +50,6 @@
                     <div class="dropdown-menu bg-dark " aria-labelledby="navbarDropdown">
                         <a class="dropdown-item text-success" href="/money/">Repartīcijas apskate</a>
                         <a class="dropdown-item text-success" href="/money/add"> Ikmenesa maksajumi</a>
-                        <a class="dropdown-item text-success" href="/money/upload">Maksājumu imports</a>
                     </div>
                 </li>
                 <?php endif ?>

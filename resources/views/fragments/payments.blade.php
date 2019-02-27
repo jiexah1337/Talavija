@@ -16,6 +16,7 @@
 
         </head>
         <main role="main" class="ml-sm-auto col-md-10 pt-3" xmlns:display="http://www.w3.org/1999/xhtml">
+
             <table class="table table-striped table-hover table-sm text-center">
                 <thead class="thead-dark">
                 <tr>
@@ -31,18 +32,15 @@
 
 
                 <tbody class="">
-                <?php
-                    $variables=$variabl['array'];
+                <form action="{{route('payments')}}" method="post" role="form">
+                @foreach($variabl['array'] as $key=>$id)
 
-                ?>
-                @foreach($variables as $key=>$id)
-                    <form action="{{route('payments')}}" method="post" role="form">
                         {{ csrf_field() }}
                         <tbody>
                 <tr>
 
                     <td  class="Veikt">
-                        <input type="checkbox"  name="checkbox[]" id="{{$key+1/1024}}" value="{{$key}}" checked />
+                        <input type="checkbox" id="checkBox___{{$key}}" name="checkbox[]" id="{{$key+1/1024}}" value="{{$key}}" checked onclick="deactivate(this,{{$key}})" />
                     </td>
                     {{--<script>--}}
                         {{--function postfunc(id){--}}
@@ -73,29 +71,100 @@
                         <td class="Merkis">
                         {{$id['Merkis']}}
                     </td>
-                    <td class="Lietotajs">
-                        <select  name="Select[]" >
-                            @if($id['member_id'] != null)
-                                <option>{{$id['Name_Lastname'][0]}} {{$id['Name_Lastname'][1]}} ({{$id['member_id']}})</option>
-                            @else
-                                <option></option>
-                            @foreach($variabl['users'] as $idd)
-                                <option>{{$idd->name}}  {{$idd->surname}} ({{$idd->member_id}})</option>
-                            @endforeach
-                            @endif
 
-                        </select>
+                    <td class="Lietotajs">
+                        <div class="form-group">
+                            @if(isset($id['member_id']))
+                                <input id="Lietotajs___{{$key}}" name="Lietotajs[{{$key}}]" list="select___{{$key}}"
+                                       oninput="search(this,{{$key}})"
+                                   value="{{$id['Name_Lastname'][0]}} {{$id['Name_Lastname'][1]}} ({{$id['member_id']}})"
+                                       type="text" style="background-color : orange;"/>
+
+                                @else
+                            <input id="Lietotajs___{{$key}}" name="Lietotajs[{{$key}}]" list="select___{{$key}}"
+                                   oninput="search(this,{{$key}})" value=""  type="text"  style=" background-color : red;"/>
+                                <datalist id="select___{{$key}}">
+                                </datalist>
+                            @endif
+                        </div>
                     </td>
 
                 </tr>
 
-                <script type="text/javascript">
-                    $selectOption = $_POST['Select[]'];
 
-                    $("#nameid").select2({
-                        placeholder: "Select a Name",
-                        allowClear: true
-                    )};
+                <script type="text/javascript">
+
+                    function deactivate(checkBox,id){
+                        lietotajs=document.getElementById("Lietotajs___"+id);
+                        color=document.getElementById('color___'+id);
+
+                        console.log(lietotajs.style.backgroundColor);
+                        if (checkBox.checked == false){
+                            if(lietotajs.style.backgroundColor == 'rgb(0, 255, 0)')
+                                lietotajs.style.backgroundColor='#ffff00';
+
+                        }else{
+                            console.log("current color = "+lietotajs.style.backgroundColor);
+                            if(lietotajs.style.backgroundColor == 'rgb(255, 255, 0)')
+                                lietotajs.style.backgroundColor = '#00ff00';
+
+
+                        }
+                    }
+                    function search(lietotajs,id){
+                        vards=lietotajs.value;
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: "GET",
+                            url: '/money/RepForGroups/search',
+                            data: { "vards": vards },
+                            success: function (data){
+                                // console.log(data);
+                                var select = document.getElementById("select___"+id);
+                                //Notirit datalistu kad nav rezultatu
+                                if(data!=false){
+                                select.innerHTML="";
+                                }
+                                for(var i = 0; i < data.length; i++) {
+                                    var opt = data[i]['name'] +" "+data[i]['lastname']+" ("+data[i]['member_id']+")";
+                                    var el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    select.appendChild(el);
+                                }
+                                changecolor(lietotajs,id);
+
+                            },
+                            error: function (req, status, error){
+                                changecolor(lietotajs,id);
+                            }
+                        });
+
+                    }
+                    $selectOption = $_POST['Select[]'];
+                    function changecolor(lietotajs, id) {
+                        colorinput = document.getElementById("color___" + id);
+                        opt = document.getElementById("select___" + id);
+                        checkBox = document.getElementById("checkBox___" + id)
+                        for (var i = 0; opt.options.length; i++) {
+                            if (opt.options[i].value == lietotajs.value && checkBox.checked == true) {
+                                lietotajs.style.backgroundColor = '#00FF00';
+                                i = opt.options.length;
+                            } else {
+                                if (opt.options[i].value == lietotajs.value) {
+                                    lietotajs.style.backgroundColor = '#ffff00';
+                                    i = opt.options.length;//break
+
+                                }else{
+                                    lietotajs.style.backgroundColor = '#FF0100';
+                                }
+                            }
+                        }
+                    }
+
+
                 </script>
 
                 @endforeach
@@ -122,6 +191,7 @@
             </button>
 
             </form>
+            <a href="/money/add" class="btn btn-primary">Atpakal</a>
 
         </main>
 

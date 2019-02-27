@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Carbon\Carbon;
+use Entities\News;
+use Entities\Repatriation;
+use Entities\Residence;
+use Entities\Study;
+use Entities\Workplace;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Sentinel;
@@ -589,5 +594,35 @@ class UsersController extends Controller
             return $e;
         }
         return response()->json(array('success' => true, 'html' => $returnHTML));
+    }
+    public function deleteUser(){
+        $member_id = $_GET['id'];
+        $user_id=User::query()->where('member_id',$member_id)->value('id');
+        DB::table('users')->where('member_id',$member_id)->delete();
+        $timeandplaces_id=Bio::query()->select('birthdata_id','deathdata_id')
+            ->where('member_id',$member_id)->get();
+
+        DB::table('activations')->where('user_id',$user_id)->delete();
+        Bio::query()->where('member_id',$member_id)->delete();
+        DB::table('persistences')->where('user_id',$user_id)->delete();
+        DB::table('reminders')->where('user_id',$user_id)->delete();
+        Repatriation::query()->where('member_id',$member_id)->delete();
+        News::query()->where('member_id',$member_id)->delete();
+
+        $locations_id=Residence::query()->select('location_id')->where('member_id',$member_id)->get();
+        if(isset($locations_id[0]['location_id'])){
+        DB::table('locations')->where('id',$locations_id[0]['location_id'])->delete();
+        }
+        Residence::query()->where('member_id',$member_id)->delete();
+        DB::table('role_history')->where('member_id',$member_id)->delete();
+        DB::table('role_users')->where('user_id',$user_id)->delete();
+        Study::query()->where('member_id',$member_id)->delete();
+        DB::table('throttle')->where('user_id',$user_id)->delete();
+        if(isset($timeandplaces_id[0])) {
+            DB::table('time_and_places')->where('location_id', $timeandplaces_id[0]['birthhdata_id'])->delete();
+            DB::table('time_and_places')->where('location_id', $timeandplaces_id[0]['deathdata_id'])->delete();
+        }
+        DB::table('user_statuses')->where('member_id',$member_id)->delete();
+        Workplace::query()->where('member_id',$member_id)->delete();
     }
 }

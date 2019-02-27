@@ -116,7 +116,6 @@ class AdministrationController extends Controller
                 $returnHTML = view('fragments.admin.modals.role-creator', compact(['permList', 'actionurl']))->render();
                 return response()->json(array('success' => true, 'html' => $returnHTML));
             } else if ($request->isMethod('post')){
-
                 //Hold the request parameters in variables to make working with it easier.
                 $data = $request->get("data");
                 $name = $request->get("name");

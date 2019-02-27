@@ -4,7 +4,7 @@
 @section('content')
     @include('shared.nav')
     @if(isset($variables))
-        <main role="main" class="ml-sm-auto col-md-10 pt-3">
+        <main role="main" class="ml-sm-auto col-md-10 pt-3" >
             <table class="table table-striped table-hover table-sm text-center">
         <thead class="thead-dark">
         <tr>
@@ -29,7 +29,7 @@
                 <input type="hidden" name="start_date" value="{{$id['start_date']}}">
 
 
-                <tr>
+                <tr id="row_{{$key}}">
                 <td class="Veikt">
                     <input type="checkbox"  name="checkbox[]"  value="{{$id['member_id']}}" checked />
 
@@ -57,11 +57,14 @@
                 {{-- mes izmantojam $key ka indeksu, $key+1*35/64 lai summas
                 un atlaizu id atskiras +1 jo var but 0 index un tad nevares atrast to inputu--}}
                 <td class="Summa">
-                    <input class="col-3" id={{$key}} name="Summa[{{$id['member_id']}}]" value={{$id['Value']}} type="text" required="required">
+                    <input class="col-3" id={{$key}} name="Summa[{{$id['member_id']}}]" value={{$id['Value']-$id['Value']*$id['discount']/100}} type="text" required="required">
                 </td>
-                <td class="Atlaides">
-                    <input class="col-3" id={{$key+1*35/64}} name="Discount[{{$id['member_id']}}]" value={{$id['discount']}} type="text" required="required" onchange="myFunction({{$key}})">
+                <td class="Atlaides" >
+                    <input class="col-3" id={{$key+1*35/64}} name="Discount[{{$id['member_id']}}]" value="{{$id['discount']}}" type="text" required="required"  onchange="myFunction({{$key}})" )>
+                <script>
 
+                    myFunction({{$key}});
+                </script>
 
                 </td>
 
@@ -69,6 +72,7 @@
             @endforeach
 
             <script>
+
                 function myFunction( id ) {
                     var summa ="<?php echo $id['Value'] ?>";
 
@@ -87,15 +91,15 @@
 
 
 
-                </table>
-                <label for="checkbox" > Select all </label>
-                <input type="checkbox" id="checkbox" onclick="myFunctionss(this)">
-                <br>
-                <button class="btn btn-primary" type="submit">
-                    Submit
-                </button>
+            </table>
+            <label for="checkbox" > Select all </label>
+            <input type="checkbox" id="checkbox" onclick="myFunctionss(this)">
+            <br>
+            <button class="btn btn-primary" type="submit">
+                Submit
+            </button>
 
-            </form>
+        </form>
         </main>
 
     @endif

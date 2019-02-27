@@ -47,7 +47,6 @@ class User extends SentinelUser
     ];
 
 
-
     public function bio(){
         return $this->hasOne(Bio::class, 'member_id','member_id');
     }
@@ -79,6 +78,15 @@ class User extends SentinelUser
         return $this->hasMany(Repatriation::class, 'member_id', 'member_id');
     }
 
+    public function isalive(){
+        $mirus=DB::table('bios')->where('member_id',$this->member_id)->value('deathdata_id');
+        if(null == TimeAndPlace::query()->where('id',$mirus)->value('date')){
+            return true;
+        }else{
+            return false;
+        }
+
+        }
     public function status(){
         $statuses = DB::table('user_statuses')->where('member_id',$this->member_id)->get();
         $statusDefs = DB::table('statuses')->get();
@@ -169,5 +177,8 @@ class User extends SentinelUser
     public function news() {
         $this->hasMany(News::class, 'member_id', 'member_id');
     }
+    public function delete(){
+        $this->delete();
 
+    }
 }

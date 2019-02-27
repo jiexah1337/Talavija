@@ -12,7 +12,7 @@
         <form method="POST" action="{{URL::to('money/store')}}" enctype="multipart/form-data" id="editProfilePictureForm">
             {{csrf_field()}}
             <div class="col-sm-6">
-                <label for="xml"> Augsupieladet atskaiti</label>
+                <label for="xml"> Importēt bankas atskaiti</label>
                 <input type="file" name="xml" class="form-control" id="image">
             <br>
                 <button type="submit" name="button" id="submit" class="btn btn-primary">Saglabāt</button>
